@@ -1,0 +1,46 @@
+name: Publish image to dockerhub for ArgoCD
+on:
+  push:
+    branches: [prod]
+  workflow_dispatch:
+
+jobs:
+  publish_image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: build
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build . -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY_NAME_WEBAPI }}:${{ github.sha }}
+      - name: publish
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY_NAME_WEBAPI }}:${{ github.sha }}
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Clone Kubernetes Manifests Repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ vars.MANIFEST_REPOSITORY }}
+          ref: "prod"
+          path: manifests
+          token: ${{ secrets.GH_TOKEN }}
+      
+      - name: Update Image Tag in Kubernetes Manifests
+        run: |
+          cd manifests
+          ls -la
+          sed -i 's|image: .*$|image: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY_NAME_WEBAPI }}:${{ github.sha }}|' ${{ vars.MANIFEST_FILE_NAME_WEBAPI }}
+      
+      - name: Commit and Push Changes
+        run: |
+          cd manifests
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Update image tag to ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY_NAME_WEBAPI }}:${{ github.sha }}"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

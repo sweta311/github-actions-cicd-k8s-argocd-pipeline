@@ -1,0 +1,20 @@
+apiVersion: v1
+data:
+  DB_HOST: 10.249.81.61
+  DB_USER: db
+  DB_PASSWORD: Mysql@76445
+  DB_NAME: wizsuite
+  SMTP_USERNAME: no-reply@xyz.com
+  SMTP_PASSWORD: kjbijkmknj
+  JWT_SECRET: nijnuinuinui
+  REFRESH_TOKEN_SECRET: njibijbibi
+  BASE_URL_REACT: https://xyz.com
+  BASIC_USER_PASSWORD: iurthg 
+  NODE_ENV: production
+  ENCRYPTION_KEY: hbhbuybuybu
+  ENCRYPTION: "true"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: wiz-webapi
+  namespace: wizsuite-prod

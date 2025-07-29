@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: wiz-webapi
+  name: wiz-webapi
+  namespace: wizsuite-prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wiz-webapi
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: wiz-webapi
+    spec:
+      containers:
+      - image: itassets799/prod-wizsuite-webapi:6abaa88e3eb78e26b241e78c11840603972729e4
+        name: wizsuite-webapi
+        envFrom:
+          - configMapRef:
+              name: wiz-webapi
+        volumeMounts:
+          - name: secrets-volume
+            mountPath: /app/secrets
+            readOnly: true
+      volumes:
+      - name: secrets-volume
+        secret:
+          secretName: prod-secrets-wizsuite                            
+      imagePullSecrets:
+      - name: itassets-docker-creds

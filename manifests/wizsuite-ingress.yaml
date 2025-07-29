@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-body-size: 8192m
+    nginx.ingress.kubernetes.io/add-base-url: "true"
+  creationTimestamp: null
+  name: wiz-webapi
+  namespace: wizsuite-prod
+spec:
+  ingressClassName: nginx
+  defaultBackend:
+    service:
+      name: wiz-webapi
+      port:
+        number: 3000
+  rules:
+  - host: ind-prod-web.xyz.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: wiz-webapi
+            port:
+              number: 3000
+        path: /
+        pathType: Exact
+  tls:
+  - hosts:
+    - ind-prod-web.xyz.com
+    secretName: ind-prod-web.xyz.com
