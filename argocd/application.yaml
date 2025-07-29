@@ -1,11 +1,11 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: web-api
+  name: pod
 spec:
   source:
     repoURL: https://github.com/your-username/your-manifest-repo.git
-    targetRevision: web-api
+    targetRevision: prod
     path: .
   destination:
     server: https://kubernetes.default.svc
