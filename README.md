@@ -1,4 +1,4 @@
-# WizSuite Web API
+# github-actions-cicd-k8s-argocd-pipeline
 
 ![CI/CD Pipeline](https://github.com/sweta311/github-actions-cicd-k8s-argocd-pipeline/actions/workflows/main.yaml/badge.svg)
 
